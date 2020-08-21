@@ -1,6 +1,6 @@
 account = {
-	"Username":"M1F74H",
-	"Password":"M1F74H4054"
+	"Username":"",
+	"Password":""
 }
 license = "xxx"
 tradeset = {
