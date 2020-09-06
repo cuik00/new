@@ -1,0 +1,350 @@
+-- Faucet ver 4.0
+-- creator@sinchan
+bb                  = 0.01
+rollDelay           = 0-- as you want
+basechance          = 66.9
+recoverychance      = 93.5
+martingalechance    = 10.5
+recovery3chance     = 10
+recovery3ChanceStep = 0.15
+--
+basebet           = bb
+recoverybasebet   = bb * 2.5
+martingalebasebet = bb * 1
+recovery3basebet  = bb * 5.1
+resetbasebet      = bb 
+--
+fibstep          = .875
+recoveryfibstep  = 1.50
+martingalemult   = 1.152
+recovery3fibstep = 0.125
+--
+LossStreakMax           = 2
+recoveryLossStreakMax   = 1
+martingaleLossStreakMax = 15
+recovery3LossStreakMax  = 999
+
+              
+housePercent = 1
+nextbet = basebet
+chance = basechance
+stepcount = 0
+streakStartBalance = 0
+recoverychance = recoverychance
+recoverystepcount = 0
+recovery = 0 
+lossStreak = 0 
+recoveryLossStreak = 0 
+reset = 0
+reset2 = 0 
+reset3 = 0 
+martingale = 0
+martingaleLossStreak = 0
+recovery3 = 0 
+recovery3LossStreak = 0
+recovery3StepCount = 0 
+recovery3Chance=recovery3chance
+
+function changebet()
+   randswitch= math.random(1,20)
+     if(randswitch >= 5) then 
+      return true
+     else 
+      return false
+  end 
+end 
+
+local clock = os.clock
+function sleep(n) 
+    local t0 = clock()
+    while clock() - t0 <= n do end
+end
+
+function myfib(level)
+    fibno=basebet
+    temp=0
+    prevfibno=0
+    if level == 0 then
+        fibno= basebet
+    else
+        for j=0,level-1,1 do
+            
+            temp=fibno
+            fibno=fibno + (prevfibno * fibstep)
+            prevfibno=temp
+        end
+    end
+    return fibno    
+end
+
+function myrecoveryfib(level)
+    fibno=recoverybasebet
+    temp=0
+    prevfibno=0
+    if level == 0 then
+        fibno= recoverybasebet
+    else
+        for j=0,level-1,1 do
+            
+            temp=fibno
+            fibno=fibno + (prevfibno * recoveryfibstep)
+            prevfibno=temp
+        end
+    end
+    return fibno    
+end
+
+function myrecovery3fib(level)
+    fibno=recovery3basebet
+    temp=0
+    prevfibno=0
+    if level == 0 then
+        fibno= recovery3basebet
+    else
+        for j=0,level-1,1 do
+            
+            temp=fibno
+            fibno=fibno + (prevfibno * recovery3fibstep)
+            prevfibno=temp
+        end
+    end
+    return fibno    
+end
+
+function dobet()
+  
+  bethigh = changebet()
+    if win then
+        if (reset == 1 and reset2 == 0 and reset3 == 0 and recovery == 0 and martingale == 0 and recovery3 == 0) then
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                recovery = 1
+                martingale = 0
+                recovery3 = 0
+                end
+        if (reset == 0 and reset2 == 1 and reset3 == 0 and recovery == 0 and martingale == 0 and recovery3 == 0) then
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                recovery = 0
+                martingale = 1
+                recovery3 = 0
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 1 and recovery == 0 and martingale == 0 and recovery3 == 0) then
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                recovery = 0
+                martingale = 0
+                recovery3 = 1
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 0 and martingale == 0 and recovery3 == 0 ) then
+                recoverystepcount = 0
+                recovery3StepCount = 0
+                streakStartBalance = 0
+                lossStreak = 0
+                recoveryLossStreak = 0 
+                martingaleLossStreak    = 0             
+                recovery3LossStreak = 0
+                stepcount = 0
+                reset = 0               
+                reset2 = 0
+                reset3 = 0
+                chance = basechance
+                nextbet = myfib(stepcount)
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 1 and martingale == 0 and recovery3 == 0 and (balance > streakStartBalance)) then
+                stepcount = 0 
+                streakStartBalance = 0 
+                recoverystepcount = 0 
+                recovery = 0
+                martingale = 0
+                recovery3 = 0 
+                reset = 0               
+                reset2 = 0
+                reset3 = 0
+                lossStreak = 0
+                recoveryLossStreak = 0 
+                martingaleLossStreak    = 0     
+                recovery3LossStreak = 0
+                chance = basechance
+                nextbet = basebet
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 0 and martingale == 1 and recovery3 == 0 and (balance > streakStartBalance)) then
+                recoverystepcount = 0
+                recovery3StepCount = 0
+                streakStartBalance = 0
+                lossStreak = 0
+                recoveryLossStreak = 0 
+                martingaleLossStreak    = 0     
+                recovery3LossStreak = 0
+                stepcount = 0  
+                recovery = 0
+                martingale = 0
+                recovery3 = 0 
+                reset = 0               
+                reset2 = 0
+                reset3 = 0 
+                chance = basechance
+                nextbet = basebet
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 0 and martingale == 0 and recovery3 == 1 and (balance > streakStartBalance)) then        
+                stepcount = 0
+                recovery3stepCount = 0
+                streakStartBalance = 0 
+                recoverystepcount = 0 
+                recovery = 0
+                martingale = 0 
+                recovery3 = 0               
+                lossStreak = 0
+                recoveryLossStreak = 0
+                martingaleLossStreak = 0
+                recovery3LossStreak = 0              
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                chance = basechance
+                nextbet = basebet
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 1 and martingale == 0 and recovery3 == 0 and (balance <= streakStartBalance)) then
+                lossStreak = 0
+                recoveryLossStreak = 0
+                martingaleLossStreak = 0
+                recovery3LossStreak = 0
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                recovery = 1
+                martingale = 0
+                recovery3 = 0               
+                recoverystepcount = recoverystepcount - 1
+                if (recoverystepcount < 1) then 
+                    recoverystepcount = 0
+                end
+                chance = recoverychance         
+                nextbet = myrecoveryfib(recoverystepcount)
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 0 and martingale == 1 and recovery3 == 0 and (balance <= streakStartBalance)) then
+                lossStreak = 0
+                recoveryLossStreak = 0
+                martingaleLossStreak = 0
+                recovery3LossStreak = 0
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                recovery = 0                
+                martingale = 1
+                recovery3 = 0               
+                nextbet = martingalebasebet             
+                end
+        if (reset == 0 and reset2 == 0 and reset3 == 0 and recovery == 0 and martingale == 0 and recovery3 == 1 and (balance <= streakStartBalance)) then
+                lossStreak = 0
+                recoveryLossStreak = 0
+                martingaleLossStreak = 0
+                recovery3LossStreak = 0
+                reset = 0
+                reset2 = 0
+                reset3 = 0
+                recovery = 0
+                martingale = 0              
+                recovery3 = 1
+                recovery3StepCount = recovery3StepCount - 2
+                recovery3ChanceStep = recovery3chance           
+                nextbet = myrecovery3fib(recovery3StepCount)
+                end  
+  
+    
+else
+      lossStreak = lossStreak + 1
+        if (streakStartBalance == 0) then
+                    streakStartBalance = (balance + previousbet * 2 + recoverybasebet * 2.5 + martingalebasebet * 2.5 + recovery3basebet* 2.5)  -- adding extra junk on the balance to make tokens actually work with this script
+            end
+        if (lossStreak == LossStreakMax) then
+                reset = 1
+                nexbet = resetbasebet       
+           end
+        if (recovery == 1 and martingale == 0 and recovery3 == 0) then
+            lossStreak = 0
+            recoveryLossStreak = recoveryLossStreak + 1
+           recoverystepcount = recoverystepcount + 1
+            chance = recoverychance
+            nextbet = myrecoveryfib(recoverystepcount)
+            if (recoveryLossStreak >= recoveryLossStreakMax) then
+                     reset = 0                
+                reset2 = 1
+                reset3 = 0
+                recovery = 0
+                martingale = 0
+                recovery3 = 0
+            end
+        end
+        if (recovery == 0 and martingale == 1 and recovery3 == 0) then
+            lossStreak = 0
+                martingaleLossStreak = martingaleLossStreak + 1
+                chance               = math.random(7*100,10.5*100)/100
+            nextbet = previousbet * martingalemult
+            if (martingaleLossStreak >= martingaleLossStreakMax) then
+               reset = 0
+               reset2 = 0
+                    reset3 = 1               
+                    recovery = 0               
+               martingale = 0
+               recovery3 = 0
+            end
+          end
+        if (recovery == 0 and martingale == 0 and recovery3 == 1) then
+                chance = recovery3chance            
+            lossStreak = 0
+                recovery3LossStreak = recovery3LossStreak + 1
+                recovery3ChanceStep = recovery3ChanceStep + 0.34                
+                chance              = math.random(10*100,44*100)/100
+                recovery3StepCount  = recovery3StepCount + 1
+            nextbet = myrecovery3fib(recovery3StepCount)
+                end            
+            if (recovery3LossStreak >= recovery3LossStreakMax) then
+                     reset = 1                
+                reset2 = 0
+                reset3 = 0
+                    recovery = 0                    
+                    martingale = 0                
+                recovery3 = 0
+            end
+        end
+        if (reset == 1) then
+                reset2 = 0            
+            recoverystepcount = 0
+            lossStreak = 0
+            recoveryLossStreak = 0
+            stepcount = 0
+            recoverystepcount = 0
+            nextbet = resetbasebet
+          end
+        if (reset2 == 1) then
+            recoverystepcount = 0
+            lossStreak = 0
+            recoveryLossStreak = 0
+            martingaleLossStreak = 0
+                reset = 0           
+            stepcount = 0
+            recoverystepcount = 0
+            nextbet = resetbasebet
+             end
+        if (reset3 == 1) then
+            recoverystepcount = 0
+            recovery3StepCount = 0 
+            lossStreak = 0
+            recoveryLossStreak = 0
+            martingaleLossStreak = 0
+            recovery3LossStreak = 0
+                reset = 0           
+            stepcount = 0
+            nextbet = resetbasebet
+             end            
+            if (recovery == 0 and martingale == 0 and recovery3 == 0 and reset == 0 and reset2 == 0 and reset3 == 0) then
+            stepcount = stepcount + 1
+            nextbet = myfib(stepcount)
+            end
+    end
+    sleep(rollDelay)
+end
