@@ -1,0 +1,12 @@
+{
+    "username": "cuik00",
+    "betset": {
+        "base": "0.01",
+        "max": 1,
+        "chance": "10",
+        "hilo": "lo",
+        "iflose": "1.2",
+        "stopwin": "0",
+        "traling": "100"
+    }
+}
