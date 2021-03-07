@@ -1,28 +1,13 @@
---DONASI
---BTC:
---35SdKoTnf3uPQmhcjMGQ6MmQHoGLftuYMQ
-
---DOGE:
---D8G4h7GAGD2kcrnME1XaXGmt3FAhWeb6vS
-
---ETH:
---0xfbc2b09b189e077666bbcbb08c54bc6f8b827a38
-
---LTC:
---MASBxmN5JcDeRs68TG4hxXzDKtq27yc9d4
-
--- Target profit 10% otomatis stop
--- JANGAN MERUBAH APAPUN DALAM SCRIPT SELAIN MENGECILKAN BET
-chance1    = 70.71
+chance1    = 70
 chance2    = 16
-chance3    = 19.8
+chance3    = 19
 chance4    = 25
-chance5    = 28.29
-chance6    = 40.24
-chance7    = 47.1
+chance5    = 28
+chance6    = 40
+chance7    = 47
 chance8    = 66
 chance9    = 10
-target     = balance*0.1
+target     = balance*2
 prebet     = balance/1000000 --TAMBAH 0 UNTUK MENGECILKAN BET AWAL
 betfactor  = 0.00001 --BETFACTOR RUBAH DI SINI
 basebet    = balance*betfactor   
